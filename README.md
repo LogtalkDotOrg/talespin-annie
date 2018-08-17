@@ -3,18 +3,18 @@
 This is my version of the project for the Introduction to SWI-Prolog class.
 
 Anne Ogborn
-
+Logtalk port by Paulo Moura
 
 ## Install 
 
-Just have a recent (tested on 7.7.18) SWI-Prolog install
+Just have a recent (tested on 7.7.18) SWI-Prolog install + Logtalk install
 
 clone this repo
 
 ## Run
 
    cd talespin/
-   swipl run.pl
+   swilgt run.pl
    ?- print_story.
 
 ## License
