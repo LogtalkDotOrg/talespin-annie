@@ -31,12 +31,14 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
+
 :- object(planner).
 
 :- public([
 	plan/4,
 	apply_action_dict/3
 ]).
+
 /** <module> A STRIPS type planner.
  *
  * This planner depends on action modules, called 'genres', as sets
@@ -327,8 +329,8 @@ my_subtract([H|T], Remove, [H|TOut]) :-
     my_subtract(T, Remove, TOut).
 
 
-:- multifile(max_plan_len/2).
 :- public(max_plan_len/2).
+:- multifile(max_plan_len/2).
 
 max_plan_len(nothing, 18).
 
