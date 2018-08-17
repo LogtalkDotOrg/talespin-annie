@@ -2,7 +2,7 @@
 
 This is my version of the project for the Introduction to SWI-Prolog class.
 
-Anne Ogborn
+Anne Ogborn  
 Logtalk port by Paulo Moura
 
 ## Install 
@@ -13,9 +13,9 @@ clone this repo
 
 ## Run
 
-   cd talespin/
-   swilgt run.pl
-   ?- print_story.
+	cd talespin/
+	swilgt run.pl
+	?- print_story.
 
 ## License
 
