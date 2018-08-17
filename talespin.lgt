@@ -42,9 +42,9 @@
  * 3. following an event, replan
  */
 :- uses(planner, [apply_action_dict/3, plan/4]).
-:- uses(list, [flatten/2]).
+:- uses(list, [flatten/2, memberchk/2]).
 :- uses(meta, [maplist/2]).
-:- uses(random, [permutation/2]).
+:- uses(random, [permutation/2, random/1]).
 
 
 %!  story(+Init:list, +Genre:atom, +Options:List, -Story:list) is det
@@ -89,7 +89,8 @@ event_happens(State, Action, Genre, EventDict) :-
 
 maybe_pick_one([], _) :- !, fail.
 maybe_pick_one([P-H | _], H) :-
-    P > random_float,
+	random(Float),
+    P > Float,
     !.
 maybe_pick_one([_ | T], Out) :-
     maybe_pick_one(T, Out).

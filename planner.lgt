@@ -47,7 +47,7 @@
  */
 :- license(bsd).
 
-:- uses(list, [append/3, member/2, memberchk/2, reverse/2]).
+:- uses(list, [append/3, length/2, member/2, memberchk/2, reverse/2]).
 :- uses(meta, [maplist/2, maplist/3]).
 :- uses(random, [permutation/2]).
 :- uses(set, [insert_all/3, union/3]).

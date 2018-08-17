@@ -16,6 +16,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /** <module> Anglify the snail stories
  *
  */
+:- uses(list, [memberchk/2]).
+
 anglify(Semantics, English) :-
     phrase(as_english([genre(snail)], EnglishList, _), Semantics),
     list_english(EnglishList, English),
