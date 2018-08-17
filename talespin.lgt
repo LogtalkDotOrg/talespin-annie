@@ -31,9 +31,9 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-:- module(talespin, [
-              story/4
-          ]).
+:- object(talespin).
+
+:- public(story/4).
 /** <Module> implements the Tale-Spin story generation algorithm
  *
  * 1. Plan
@@ -41,7 +41,11 @@
  *    have outcome be event's outcome, not action's outcome.
  * 3. following an event, replan
  */
-:- use_module(planner).
+:- uses(planner, [apply_action_dict/3, plan/4]).
+:- uses(list, [flatten/2]).
+:- uses(meta, [maplist/2]).
+:- uses(random, [permutation/2]).
+
 
 %!  story(+Init:list, +Genre:atom, +Options:List, -Story:list) is det
 %
@@ -69,7 +73,7 @@ simulate(State, Genre, Options, [Action|Remains], [Desc | RemDesc]) :-
         Desc = Event.desc,
         simulate(NewState, Genre, Options, NewPlan, RemDesc)
     ;
-        Genre:action(Action, Dict),
+        Genre::action(Action, Dict),
         apply_action_dict(State, Dict, NewState),
         Desc = Dict.desc,
         simulate(NewState, Genre, Options, Remains, RemDesc)
@@ -80,7 +84,7 @@ event_happens(State, Action, Genre, EventDict) :-
     ->  true
     ;   Possible = []
     ),
-    random_permutation(Possible, RandPossible),
+    permutation(Possible, RandPossible),
     maybe_pick_one(RandPossible, EventDict).
 
 maybe_pick_one([], _) :- !, fail.
@@ -91,7 +95,7 @@ maybe_pick_one([_ | T], Out) :-
     maybe_pick_one(T, Out).
 
 possible_event(State, Genre, ActionName, Prob-Dict) :-
-    Genre:event(ActionName, Prob, Dict),
+    Genre::event(ActionName, Prob, Dict),
     maplist(is_in(State), Dict.pre),
     maplist(not_in(State), Dict.negpre).
 
@@ -102,3 +106,4 @@ is_in(List, Member) :-
 not_in(List, Member) :-
     \+ memberchk(Member, List).
 
+:- end_object.

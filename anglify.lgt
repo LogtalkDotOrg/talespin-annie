@@ -10,9 +10,9 @@ Redistribution and use in source and binary forms, with or without modification,
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-:- module(anglify, [
-              anglify/2
-          ]).
+:- object(anglify).
+
+:- public(anglify/2).
 /** <module> Anglify the snail stories
  *
  */
@@ -103,7 +103,7 @@ format_desc(Ctx, Format, Args, CtxOut, String) --> [],
 args_atoms(Ctx, [], [], Ctx).
 args_atoms(Ctx, [place(A) | Tail], [Atom | TailOut], Ctx1) :-
     memberchk(genre(Genre), Ctx),
-    Genre:place_desc(A, Short, Long),
+    Genre::place_desc(A, Short, Long),
     (  memberchk(A, Ctx)
     ->
        Atom = Short,
@@ -114,7 +114,7 @@ args_atoms(Ctx, [place(A) | Tail], [Atom | TailOut], Ctx1) :-
     ).
 args_atoms(Ctx, [friend(A) | Tail], [Atom | TailOut], Ctx1) :-
     memberchk(genre(Genre), Ctx),
-    Genre:friend_desc(A, Short, Long),
+    Genre::friend_desc(A, Short, Long),
     (  memberchk(A, Ctx)
     ->
        Atom = Short,
@@ -126,3 +126,5 @@ args_atoms(Ctx, [friend(A) | Tail], [Atom | TailOut], Ctx1) :-
 
 list_english(List, English) :-
     atomics_to_string(List, '\n', English).
+
+:- end_object.

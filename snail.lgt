@@ -10,10 +10,15 @@ Redistribution and use in source and binary forms, with or without modification,
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-:- module(snail, [action/2,
-                 event/3,
-                 init_conditions/1,
-                 friend_desc/3]).
+:- object(snail).
+
+:- public([
+	action/2,
+	event/3,
+	init_conditions/1,
+	friend_desc/3,
+	place_desc/3
+]).
 /** <module> snail stories
  *
  * These are parables, with different messages
@@ -40,11 +45,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  *
  *
  */
-:- discontiguous action/2, event/3, add_event/2.
+:- uses(list, [append/3, member/2]).
 
-:- multifile planner:max_plan_len/2.
+:- discontiguous([action/2, event/3, add_event/2]).
 
-planner:max_plan_len(snail, 12).
+:- multifile(planner::max_plan_len/2).
+
+planner::max_plan_len(snail, 12).
 
 init_conditions([not_inited, goal(has_goals)]).
 
@@ -320,3 +327,5 @@ strong(worm).
 % Pomatia loses their ball in the lily pond.
 
 % Pomatia could find lose their ball in the pond
+
+:- end_object.

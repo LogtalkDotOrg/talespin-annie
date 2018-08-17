@@ -1,4 +1,4 @@
-:- module(run, [print_story/0]).
+%:- module(run, [print_story/0]).
 /*
  *
  * Copyright 2018, Anne Ogborn
@@ -12,16 +12,30 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-:-ensure_loaded(talespin).
-:-ensure_loaded(anglify).
-:-ensure_loaded(fairy).
-:-ensure_loaded(snail).
+%:- use_module(talespin).
+%:- use_module(anglify).
+%:- use_module(fairy, []).
+%:- use_module(snail, []).
+
+:- initialization((
+	logtalk_load(library(types_loader)),
+	logtalk_load(library(random_loader)),
+	logtalk_load(library(metapredicates_loader)),
+	logtalk_load([
+		planner,
+		talespin,
+		anglify,
+		fairy,
+		snail
+	])
+)).
+
 
 go(E) :-
-    snail:init_conditions(S),
-    story(S, snail, [], Story),
+    snail::init_conditions(S),
+    talespin::story(S, snail, [], Story),
     print_term(Story, []),
-    anglify(Story, E).
+    anglify::anglify(Story, E).
 
 print_story :-
     go(E),

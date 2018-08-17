@@ -31,10 +31,12 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-:- module(planner, [
-              plan/4,
-              apply_action_dict/3
-          ]).
+:- object(planner).
+
+:- public([
+	plan/4,
+	apply_action_dict/3
+]).
 /** <module> A STRIPS type planner.
  *
  * This planner depends on action modules, called 'genres', as sets
@@ -44,6 +46,12 @@
  *
  */
 :- license(bsd).
+
+:- uses(list, [append/3, member/2, memberchk/2, reverse/2]).
+:- uses(meta, [maplist/2, maplist/3]).
+:- uses(random, [permutation/2]).
+:- uses(set, [insert_all/3, union/3]).
+:- uses(logtalk, [print_message/3]).
 
 % ! plan(+InitConditions:list, +Genre:atom, -Plan:list, +Options:list)
 % !         is nondet
@@ -65,7 +73,7 @@ plan(InitConditions, Genre, Plan, Options) :-
     (   member(order(Order), Options)
     ;   Order = random
     ),
-    list_to_ord_set(InitConditions, OrdCond),
+    insert_all(InitConditions, [], OrdCond),
     plan_(Genre,
           Order,
           /*Open*/ [OrdCond-[]],
@@ -90,7 +98,7 @@ plan_(_Genre,
       [State-Story |_],
       _Closed,
       Story) :-
-    debug(planner(current), '~q ~q', [State, Story]),
+    print_message(debug, planner, current-(State-Story)),
     at_goal(State).
 % if we have a shaggy dog story, discard from Open
 plan_(Genre,
@@ -139,7 +147,7 @@ ordered_possible_action_states(State,
                                Possible) :-
     possible_actions(State, Genre, RawPossible),
     (   Order = random
-    ->  random_permutation(RawPossible, Possible)
+    ->  permutation(RawPossible, Possible)
     ;   RawPossible = Possible
     ).
 
@@ -192,7 +200,7 @@ add_unclosed_children_to_open(  Story,
                                 Open,
                                 OpenOut) :-
     memberchk(Child-_, Open),   % it's already in the open set
-    debug(planner(dup_open), '~q', [Child-[Action | Story]]),
+    print_message(debug, planner, dup_open-[Child-[Action | Story]]),
     !,  % green
     add_unclosed_children_to_open(Story,
                                     Closed,
@@ -257,7 +265,7 @@ possible_actions(Cond, Genre, Possible) :-
     findall(Name, possible_action(Cond, Genre, Name), Possible).
 
 possible_action(Cond, Genre, Name) :-
-    Genre:action(Name, Act),
+    Genre::action(Name, Act),
     action{  pre:Pre,
            negpre: NegPre
         } :< Act,
@@ -288,7 +296,7 @@ actions_children(State, Genre, PossibleActions, Children) :-
     maplist(apply_action(State, Genre), PossibleActions, Children).
 
 apply_action(State, Genre, Name, NewState) :-
-    Genre:action(Name, Action),
+    Genre::action(Name, Action),
     apply_action_dict(State, Action, NewState).
 
 apply_action_dict(State, Action, NewState) :-
@@ -297,8 +305,8 @@ apply_action_dict(State, Action, NewState) :-
         remove: Remove
     } :< Action,
     my_subtract(State, Remove, S1),
-    list_to_ord_set(Add, OrdAdd),
-    ord_union(S1, OrdAdd, NewState).
+    insert_all(Add, [], OrdAdd),
+    union(S1, OrdAdd, NewState).
 
 %!     my_subtract(+A:list, +B:list, -C:list) is det
 %
@@ -319,6 +327,9 @@ my_subtract([H|T], Remove, [H|TOut]) :-
     my_subtract(T, Remove, TOut).
 
 
-:- multifile planner:max_plan_len/2.
+:- multifile(max_plan_len/2).
+:- public(max_plan_len/2).
 
 max_plan_len(nothing, 18).
+
+:- end_object.
