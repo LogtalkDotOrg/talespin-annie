@@ -216,7 +216,7 @@ add_event(
       action{
           pre: [],
           negpre: [gardener],
-          add: [gardener, had_adventure],
+          add: [gardener, had_adventure, gardener_has_appeared],
           remove: [],
           desc: [gardener_appears]
       }).
@@ -244,6 +244,31 @@ action(tea_party,
            remove: [],
            desc: [attended_tea_party]
        }).
+
+event(tea_party,
+       0.4,
+       action{
+           pre:[loc(mushrooms), gardener_has_appeared],
+           negpre: [mushrooms_gone, saved_froggy_home],
+           add: [mushrooms_gone, goal(saved_froggy_home)],
+           remove: [goal(attended_tea_party)],
+           desc: [mushrooms_gone]
+       }).
+
+ 		 /*******************************
+ 		 * Froggy's home                *
+ 		 *******************************/
+
+ action(magic_fix,
+        action{
+            pre: [mushrooms_gone, goal(saved_froggy_home)],
+            negpre: [],
+            add: [saved_froggy_home],
+            remove: [goal(saved_froggy_home), mushrooms_gone],
+            desc: [magic_mushrooms_fix]
+        }).
+
+
 
 theme(help). % Friends help each other
 % theme(friends_before_things).
